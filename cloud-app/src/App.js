@@ -1,15 +1,21 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link
+} from "react-router-dom";
 import Dashboard from './View/Dashboard.js';
 import SignIn from './View/SignIn.js';
 import SignUp from './View/SignUp.js';
 
 function App() {
   return (
-    <div className="App">
-      <SignUp/>
-    </div>
+    <Router>
+      <Route exact path="/" component={SignIn} />
+      <Route exact path="/sign-up" component={SignUp} />
+      <Route exact path="/dashboard" component={Dashboard} />
+    </Router>
   );
 }
 

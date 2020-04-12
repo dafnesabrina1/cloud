@@ -48,7 +48,7 @@ export default class Orders extends React.Component {
   }
   componentDidMount(){
     let id = localStorage.getItem('id');
-    fetch('http://cloud-dev2.us-east-2.elasticbeanstalk.com/get_user_skills/'+id)
+    fetch('http://cloud-dev2.us-east-2.elasticbeanstalk.com/get_user_wanted_skills/'+id)
         .then(res => res.json())
         .catch(error => alert("Invalid User"))
         .then(response => {
@@ -74,9 +74,9 @@ export default class Orders extends React.Component {
     }
     let data={
       id_user: localStorage.getItem('id'),
-      id_skills: id
+      id_skill: id
     }
-    fetch('http://cloud-dev2.us-east-2.elasticbeanstalk.com/delete_user_skill', {
+    fetch('http://cloud-dev2.us-east-2.elasticbeanstalk.com/delete_user_wanted_skill', {
         method: 'POST', // or 'PUT'
         body: JSON.stringify(data), // data can be `string` or {object}!
         headers:{
@@ -84,7 +84,7 @@ export default class Orders extends React.Component {
         }
     })
     .then(res => res.json())
-    .catch(error => alert("Could not delete please try again later"))
+    .catch(error => alert("Could not delete, please try again later"))
     .then(response => {
         if (response){
           window.location.reload();
@@ -109,11 +109,11 @@ export default class Orders extends React.Component {
   handleAddSkill(){
     let data={
       id_user: parseInt(localStorage.getItem('id')),
-	    id_skills: parseInt(this.state.language.id),
+	    id_skill: parseInt(this.state.language.id),
 	    level: parseInt(this.state.level)
     }
-    if (data.id_skills && data.id_user && data.level){
-      fetch('http://cloud-dev2.us-east-2.elasticbeanstalk.com/add_user_skill', {
+    if (data.id_skill && data.id_user && data.level){
+      fetch('http://cloud-dev2.us-east-2.elasticbeanstalk.com/add_user_wanted_skill', {
         method: 'POST', // or 'PUT'
         body: JSON.stringify(data), // data can be `string` or {object}!
         headers:{
@@ -121,7 +121,7 @@ export default class Orders extends React.Component {
         }
       })
       .then(res => res.json())
-      .catch(error => alert("Could not add skill, please try again later"))
+      .catch(error => alert("Could not add wanted skill, please try again later"))
       .then(response => {
           if (response){
             window.location.reload();
@@ -142,7 +142,7 @@ export default class Orders extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <Title>My Skills</Title>
+        <Title>My Wanted Skills</Title>
         <Table size="small">
           <TableHead>
             <TableRow>
@@ -154,7 +154,7 @@ export default class Orders extends React.Component {
           </TableHead>
           <TableBody>
             {this.state.userskills.map((i) => (
-              <TableRow key={i.id_skills}>
+              <TableRow key={i.id_skill}>
                 <TableCell>{i.programming_language}</TableCell>
                 <TableCell>{i.level}</TableCell>
                 <TableCell>{i.description}</TableCell>
@@ -162,9 +162,9 @@ export default class Orders extends React.Component {
                   <IconButton 
                   aria-label="delete" 
                   color="primary"
-                  id ={i.id_skills}
+                  id ={i.id_skill}
                   onClick={this.handleDelete.bind(this)}>
-                    <DeleteIcon id ={i.id_skills}/>
+                    <DeleteIcon id ={i.id_skill}/>
                   </IconButton>
                 </TableCell>
               </TableRow>

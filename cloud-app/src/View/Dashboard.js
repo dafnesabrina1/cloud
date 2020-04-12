@@ -20,6 +20,7 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import { mainListItems } from '../components/listItems';
 import Orders from '../components/Orders';
+import WantedSkills from '../components/WantedSkills';
 
 function Copyright() {
   return (
@@ -177,7 +178,7 @@ export default function Dashboard() {
             </Grid>
             <Grid item xs={12}>
               <Paper className={classes.paper}>
-                <Orders />
+                <WantedSkills />
               </Paper>
             </Grid>
           </Grid>

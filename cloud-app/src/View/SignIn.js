@@ -43,7 +43,6 @@ export default class SignIn extends React.Component {
     }
     handleSubmit(){
         let data = {user_name:this.state.username, password: this.state.password}
-        console.log(data);
         fetch('http://cloud-dev2.us-east-2.elasticbeanstalk.com/sign_in', {
             method: 'POST', // or 'PUT'
             body: JSON.stringify(data), // data can be `string` or {object}!
@@ -52,7 +51,7 @@ export default class SignIn extends React.Component {
             }
         })
         .then(res => res.json())
-        .catch(error => console.error('Error:', error))
+        .catch(error => alert("Invalid Username or Password"))
         .then(response => {
             if (response){
                 this.setState({

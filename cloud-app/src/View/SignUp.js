@@ -3,15 +3,14 @@ import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import { Redirect } from 'react-router-dom';
+import "./SignUp.css"
 
 function Copyright() {
   return (
@@ -26,40 +25,83 @@ function Copyright() {
   );
 }
 
-const useStyles = makeStyles((theme) => ({
-  paper: {
-    marginTop: theme.spacing(8),
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-  },
-  avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
-  },
-  form: {
-    width: '100%', // Fix IE 11 issue.
-    marginTop: theme.spacing(3),
-  },
-  submit: {
-    margin: theme.spacing(3, 0, 2),
-  },
-}));
+export default class SignUp extends React.Component {
+    state = {
+        username: "", 
+        password: "",
+        email: "", 
+        name: "", 
+        dashboard: false
+    }
 
-export default function SignUp() {
-  const classes = useStyles();
+    handleNameChange(e){
+        this.setState({
+            name: e.target.value
+        })
+    }
+    handleUserChange(e){
+        this.setState({
+            username: e.target.value
+        })
+    }
+    handleEmailChange(e){
+        this.setState({
+            email: e.target.value
+        })
+    }
+    handlePasswordChange(e){
+        this.setState({
+            password: e.target.value
+        })
+    }
+    handleSubmit(){
+        let data = {
+            user_name: this.state.username,
+            name: this.state.name, 
+            password: this.state.password, 
+            email: this.state.email
+        };
+        if (this.state.username!= "" && this.state.name != "" && this.state.password!= "" && this.state.email != ""){
+            fetch('http://cloud-dev2.us-east-2.elasticbeanstalk.com/add_users', {
+            method: 'POST', // or 'PUT'
+            body: JSON.stringify(data), // data can be `string` or {object}!
+            headers:{
+              'Content-Type': 'application/json'
+            }
+            })
+            .then(res => res.json())
+            .catch(error => console.error('Error:', error))
+            .then(response => {
+                if (response){
+                    this.setState({
+                        username: "",
+                        password: "", 
+                        email: "", 
+                        name: "",
+                        dashboard: true
+                    })
 
+                }
+            });
+        } else {
+            alert("Please fill all the inputs");
+        }
+    }
+    render() {
   return (
     <Container component="main" maxWidth="xs">
+        {this.state.dashboard?
+            <Redirect to='/dashboard' /> : ""
+        }
       <CssBaseline />
-      <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
+      <div className="paper">
+        <Avatar className="avatar">
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
           Sign up
         </Typography>
-        <form className={classes.form} noValidate>
+        <form className="form" noValidate>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
               <TextField
@@ -71,6 +113,8 @@ export default function SignUp() {
                 id="firstName"
                 label="First Name"
                 autoFocus
+                value={this.state.name}
+                onChange={this.handleNameChange.bind(this)}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -82,6 +126,8 @@ export default function SignUp() {
                 label="Username"
                 name="userName"
                 autoComplete="lname"
+                value={this.state.username}
+                onChange={this.handleUserChange.bind(this)}
               />
             </Grid>
             <Grid item xs={12}>
@@ -93,6 +139,8 @@ export default function SignUp() {
                 label="Email Address"
                 name="email"
                 autoComplete="email"
+                value={this.state.email}
+                onChange={this.handleEmailChange.bind(this)}
               />
             </Grid>
             <Grid item xs={12}>
@@ -105,17 +153,19 @@ export default function SignUp() {
                 type="password"
                 id="password"
                 autoComplete="current-password"
+                value={this.state.password}
+                onChange={this.handlePasswordChange.bind(this)}
               />
             </Grid>
             <Grid item xs={12}>
             </Grid>
           </Grid>
           <Button
-            type="submit"
             fullWidth
             variant="contained"
             color="primary"
-            className={classes.submit}
+            className="submit"
+            onClick={this.handleSubmit.bind(this)}
           >
             Sign Up
           </Button>
@@ -132,5 +182,6 @@ export default function SignUp() {
         <Copyright />
       </Box>
     </Container>
-  );
+  )
+    }
 }

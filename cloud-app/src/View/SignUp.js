@@ -72,8 +72,8 @@ export default class SignUp extends React.Component {
             .then(res => res.json())
             .catch(error => console.error('Error:', error))
             .then(response => {
-                localStorage.setItem("id", response.id);
                 if (response){
+                  localStorage.setItem("id", response.id);
                     this.setState({
                         username: "",
                         password: "", 

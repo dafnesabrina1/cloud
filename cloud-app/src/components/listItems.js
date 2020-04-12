@@ -17,7 +17,7 @@ export const mainListItems = (
       <ListItemText primary="Profile" />
     </ListItem>
     <ListItem button onClick={()=>{
-      window.location.href = "/become-a-mentor"
+      window.location.href = "/look-for-a-mentor"
     }}>
       <ListItemIcon>
         <PeopleIcon />

@@ -17,7 +17,6 @@ import Link from '@material-ui/core/Link';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import { mainListItems } from '../components/listItems';
-import Availability from '../components/Availability';
 
 function Copyright() {
   return (
@@ -138,7 +137,7 @@ export default function Dashboard() {
             <MenuIcon />
           </IconButton>
           <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-            Become a Mentor
+            Loof For A Mentor
           </Typography>
         </Toolbar>
       </AppBar>
@@ -164,7 +163,10 @@ export default function Dashboard() {
             {/* Recent Orders */}
             <Grid item xs={12}>
               <Paper className={classes.paper}>
-                  <Availability/>
+              </Paper>
+            </Grid>
+            <Grid item xs={12}>
+              <Paper className={classes.paper}>
               </Paper>
             </Grid>
           </Grid>

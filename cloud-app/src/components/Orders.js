@@ -50,7 +50,7 @@ export default class Orders extends React.Component {
     let id = localStorage.getItem('id');
     fetch('http://cloud-dev2.us-east-2.elasticbeanstalk.com/get_user_skills/'+id)
         .then(res => res.json())
-        .catch(error => alert("Invalid User"))
+        .catch(error=>{})
         .then(response => {
             this.setState({
               userskills: response
@@ -59,7 +59,7 @@ export default class Orders extends React.Component {
 
     fetch('http://cloud-dev2.us-east-2.elasticbeanstalk.com/get_all_skills')
     .then(res => res.json())
-    .catch(error => alert("Invalid User"))
+    .catch(error=>{})
     .then(response => {
         this.setState({
           skills: response

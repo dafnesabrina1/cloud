@@ -13,7 +13,7 @@ export default class Availability extends Component {
         let id = localStorage.getItem('id');
         fetch('http://cloud-dev2.us-east-2.elasticbeanstalk.com/get_user_availabilities/'+id)
             .then(res => res.json())
-            .catch(error => alert("Invalid User"))
+            .catch(error => {})
             .then(response => {
                 console.log("Response",response);
                 let savedSelections = []

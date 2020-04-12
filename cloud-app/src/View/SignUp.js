@@ -61,7 +61,7 @@ export default class SignUp extends React.Component {
             password: this.state.password, 
             email: this.state.email
         };
-        if (this.state.username!= "" && this.state.name != "" && this.state.password!= "" && this.state.email != ""){
+        if (this.state.username!== "" && this.state.name !== "" && this.state.password!== "" && this.state.email !== ""){
             fetch('http://cloud-dev2.us-east-2.elasticbeanstalk.com/add_users', {
             method: 'POST', // or 'PUT'
             body: JSON.stringify(data), // data can be `string` or {object}!
@@ -72,6 +72,7 @@ export default class SignUp extends React.Component {
             .then(res => res.json())
             .catch(error => console.error('Error:', error))
             .then(response => {
+                localStorage.setItem("id", response.id);
                 if (response){
                     this.setState({
                         username: "",

@@ -1,68 +1,123 @@
 import React from 'react';
-import Link from '@material-ui/core/Link';
-import { makeStyles } from '@material-ui/core/styles';
+import Modal from '@material-ui/core/Modal';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Title from './Title';
-
-// Generate Order Data
-function createData(id, date, name, shipTo, paymentMethod, amount) {
-  return { id, date, name, shipTo, paymentMethod, amount };
-}
-
-const rows = [
-  createData(0, '16 Mar, 2019', 'Elvis Presley', 'Tupelo, MS', 'VISA ⠀•••• 3719', 312.44),
-  createData(1, '16 Mar, 2019', 'Paul McCartney', 'London, UK', 'VISA ⠀•••• 2574', 866.99),
-  createData(2, '16 Mar, 2019', 'Tom Scholz', 'Boston, MA', 'MC ⠀•••• 1253', 100.81),
-  createData(3, '16 Mar, 2019', 'Michael Jackson', 'Gary, IN', 'AMEX ⠀•••• 2000', 654.39),
-  createData(4, '15 Mar, 2019', 'Bruce Springsteen', 'Long Branch, NJ', 'VISA ⠀•••• 5919', 212.79),
-];
+import IconButton from '@material-ui/core/IconButton';
+import DeleteIcon from '@material-ui/icons/Delete';
+import AddShoppingCartIcon from '@material-ui/icons/AddCircle'
+import "./Orders.css";
 
 function preventDefault(event) {
   event.preventDefault();
 }
 
-const useStyles = makeStyles((theme) => ({
-  seeMore: {
-    marginTop: theme.spacing(3),
-  },
-}));
+export default class Orders extends React.Component {
+  state = {
+    userskills: [], 
+    open: false
+  }
+  componentDidMount(){
+    let id = localStorage.getItem('id');
+    fetch('http://cloud-dev2.us-east-2.elasticbeanstalk.com/get_user_skills/'+id)
+        .then(res => res.json())
+        .catch(error => alert("Invalid User"))
+        .then(response => {
+            this.setState({
+              userskills: response
+            })
+        });
+  }
 
-export default function Orders() {
-  const classes = useStyles();
-  return (
-    <React.Fragment>
-      <Title>Recent Orders</Title>
-      <Table size="small">
-        <TableHead>
-          <TableRow>
-            <TableCell>Date</TableCell>
-            <TableCell>Name</TableCell>
-            <TableCell>Ship To</TableCell>
-            <TableCell>Payment Method</TableCell>
-            <TableCell align="right">Sale Amount</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {rows.map((row) => (
-            <TableRow key={row.id}>
-              <TableCell>{row.date}</TableCell>
-              <TableCell>{row.name}</TableCell>
-              <TableCell>{row.shipTo}</TableCell>
-              <TableCell>{row.paymentMethod}</TableCell>
-              <TableCell align="right">{row.amount}</TableCell>
+  handleDelete(e){
+    let id = e.target.id;
+    if(!id){
+      id = e.target.parentNode.id;
+    }
+    let data={
+      id_user: localStorage.getItem('id'),
+      id_skills: id
+    }
+    fetch('http://cloud-dev2.us-east-2.elasticbeanstalk.com/delete_user_skill', {
+        method: 'POST', // or 'PUT'
+        body: JSON.stringify(data), // data can be `string` or {object}!
+        headers:{
+          'Content-Type': 'application/json'
+        }
+    })
+    .then(res => res.json())
+    .catch(error => alert("Could not delete please try again later"))
+    .then(response => {
+        if (response){
+          window.location.reload();
+        }
+    });
+  }
+
+  handleOpen(){
+    this.setState({
+      open: true
+    })
+  }
+
+  handleClose(){
+    this.setState({
+      open: false
+    })
+  }
+
+  render() {
+    return (
+      <React.Fragment>
+        <Title>My Skills</Title>
+        <Table size="small">
+          <TableHead>
+            <TableRow>
+              <TableCell>Skill</TableCell>
+              <TableCell>Level</TableCell>
+              <TableCell>Description</TableCell>
+              <TableCell/>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-      <div className={classes.seeMore}>
-        <Link color="primary" href="#" onClick={preventDefault}>
-          See more orders
-        </Link>
-      </div>
-    </React.Fragment>
-  );
+          </TableHead>
+          <TableBody>
+            {this.state.userskills.map((i) => (
+              <TableRow key={i.id_skills}>
+                <TableCell>{i.programming_language}</TableCell>
+                <TableCell>{i.level}</TableCell>
+                <TableCell>{i.description}</TableCell>
+                <TableCell>
+                  <IconButton 
+                  aria-label="delete" 
+                  color="primary"
+                  id ={i.id_skills}
+                  onClick={this.handleDelete.bind(this)}>
+                    <DeleteIcon id ={i.id_skills}/>
+                  </IconButton>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+        <div className="seeMore">
+        <IconButton color="primary" aria-label="add to shopping cart" onClick={this.handleOpen.bind(this)}>
+          <AddShoppingCartIcon />
+        </IconButton>
+        </div>
+        <Modal
+        open={this.state.open}
+        onClose={this.handleClose.bind(this)}
+        className="modal"
+        >
+          <div className="paper">
+            <h2 id="spring-modal-title">Spring modal</h2>
+            <p id="spring-modal-description">react-spring animates me.</p>
+          </div>
+        </Modal>
+        
+      </React.Fragment>
+    )
+  }
 }

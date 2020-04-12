@@ -53,6 +53,7 @@ export default class SignIn extends React.Component {
         .then(res => res.json())
         .catch(error => alert("Invalid Username or Password"))
         .then(response => {
+            localStorage.setItem("id", response.id);
             if (response){
                 this.setState({
                     username: "",

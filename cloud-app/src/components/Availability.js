@@ -1,13 +1,16 @@
 import React, { Component } from 'react';
 import AvailableTimes from 'react-available-times';
 import Button from '@material-ui/core/Button';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Switch from '@material-ui/core/Switch';
 
 export default class Availability extends Component {
     state = {
         selections: [], 
         savedSelections: [{start: new Date("Fri, 17 Apr 2020 10:30:00"), end: new Date("Fri, 17 Apr 2020 11:30:00")}],
         render: false, 
-        selectionCalled: []
+        selectionCalled: [], 
+        mentor: false
     }
     componentWillMount() {
         let id = localStorage.getItem('id');
@@ -27,6 +30,19 @@ export default class Availability extends Component {
                     console.log(this.state.savedSelections)
                 })
             });
+        fetch('http://cloud-dev2.us-east-2.elasticbeanstalk.com/get_user_is_mentor/'+id)
+        .then(res => res.json())
+        .catch(error => {})
+        .then(response => {
+            if (response){
+                console.log("Response",response);
+                this.setState({
+                    mentor: response.res, 
+                }, ()=>{
+                    console.log(this.state.mentor)
+                })
+            }
+        });
     }
 
     formatAMPM(date) { // This is to display 12 hour format like you asked
@@ -77,11 +93,58 @@ export default class Availability extends Component {
         })
     }
 
+    handleMentorChange(){
+        this.setState({
+            mentor: !this.state.mentor
+        },()=>{
+            if (this.state.mentor){
+                let data={
+                    id_user: localStorage.getItem('id'),
+                    id_roles: 3,
+                    name: "Teacher"
+                }
+                fetch('http://cloud-dev2.us-east-2.elasticbeanstalk.com/add_user_role', {
+                    method: 'POST', // or 'PUT'
+                    body: JSON.stringify(data), // data can be `string` or {object}!
+                    headers:{
+                    'Content-Type': 'application/json'
+                    }
+                })
+                .then(res => res.json())
+                .catch(error => console.error('Error:', error))
+                .then(response => {
+                    window.location.reload();
+                });
+            } else {
+                let data={
+                    id_user: localStorage.getItem('id'),
+                    id_roles: 3,
+                }
+                fetch('http://cloud-dev2.us-east-2.elasticbeanstalk.com/delete_user_role', {
+                    method: 'POST', // or 'PUT'
+                    body: JSON.stringify(data), // data can be `string` or {object}!
+                    headers:{
+                    'Content-Type': 'application/json'
+                    }
+                })
+                .then(res => res.json())
+                .catch(error => console.error('Error:', error))
+                .then(response => {
+                    window.location.reload();
+                });
+            }
+        })
+    }
+
 
     render() {
         if (this.state.render) {
             return (
                 <div>
+                    <FormControlLabel
+                        control={<Switch checked={this.state.mentor} onChange={this.handleMentorChange.bind(this)} name="mentor" />}
+                        label="Become A Mentor"
+                        />
                     <AvailableTimes
                         weekStartsOn="monday"
                         onChange={(selections) => {

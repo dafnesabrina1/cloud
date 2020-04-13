@@ -44,10 +44,14 @@ export default class FilterMentors extends Component {
     handleSubmit(){
         let start = this.state.start.split("T").join(' ') + ":00";
         let end = this.state.end.split("T").join(' ') + ":00";
+        let skill=undefined;
+        if (this.state.language.id){
+            skill= this.state.language.id;
+        }
         let data = {
             start: start,
             end: end,
-            id_skills: this.state.language.id
+            id_skills: skill
         }
         console.log(data);
         if (data.id_skills && data.start && data.end){

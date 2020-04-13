@@ -3,13 +3,19 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import Autocomplete from '@material-ui/lab/Autocomplete';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
 
 export default class FilterMentors extends Component {
     state={
         start: "", 
         end: "", 
         skills: [], 
-        language: ""
+        language: "", 
+        mentors: []
     }
 
     componentDidMount(){
@@ -55,7 +61,11 @@ export default class FilterMentors extends Component {
             .then(res => res.json())
             .catch(error => alert("Could not do the Filter, please try again later"))
             .then(response => {
-                console.log(response);
+                if (response){
+                    this.setState({
+                        mentors: response
+                    })
+                }
             });
         }else {
             alert("Please Fill Everything out!");
@@ -109,6 +119,24 @@ export default class FilterMentors extends Component {
                 >
                 Search
                 </Button>
+                <Grid item xs={12}>
+                    <Table size="small">
+                    <TableHead>
+                        <TableRow>
+                        <TableCell>Name</TableCell>
+                        <TableCell>Email</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {this.state.mentors.map((i) => (
+                        <TableRow key={i.id}>
+                            <TableCell>{i.name}</TableCell>
+                            <TableCell>{i.email}</TableCell>
+                        </TableRow>
+                        ))}
+                    </TableBody>
+                    </Table>
+                </Grid>
             </div>
         )
     }

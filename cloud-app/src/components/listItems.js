@@ -5,6 +5,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import PeopleIcon from '@material-ui/icons/People';
 import LayersIcon from '@material-ui/icons/Layers';
+import ArrowBackSharp from '@material-ui/icons/ArrowBackSharp';
 
 export const mainListItems = (
   <div>
@@ -31,6 +32,14 @@ export const mainListItems = (
         <LayersIcon />
       </ListItemIcon>
       <ListItemText primary="Become a Mentor" />
+    </ListItem>
+    <ListItem button onClick={()=>{
+      window.location.href = "/"
+    }}>
+      <ListItemIcon>
+        <ArrowBackSharp />
+      </ListItemIcon>
+      <ListItemText primary="Log Out" />
     </ListItem>
   </div>
 );
